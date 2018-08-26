@@ -1,0 +1,57 @@
+package com.teamSankya.jdbc;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class TransactionInsertExample {
+
+	public static void main(String[] args) throws ClassNotFoundException {
+
+		Class.forName("com.mysql.jdbc.Driver");
+
+		try(Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/teamSankya?user=root&password=root"))
+		{
+
+				con.setAutoCommit(false);
+		
+				try (PreparedStatement pstmt1= con.prepareStatement("insert into employee_info values(?,?,?)");
+						PreparedStatement pstmt2= con.prepareStatement("insert into contact_info values(?,?,?)");
+						PreparedStatement pstmt3= con.prepareStatement("insert into address_info values(?,?,?,?)"))
+				{
+				//setters for pstmt1 and pstmt1.executeupdate
+				pstmt1.setInt(1, Integer.parseInt(args[0]));
+				pstmt1.setString(2, args[1]);
+				pstmt1.setString(3, args[2]);
+						
+				//setters for pstmt2 and pstmt2.executeupdate
+				pstmt2.setInt(1, Integer.parseInt(args[0]));
+				pstmt2.setLong(2, Long.parseLong(args[3]));
+				pstmt2.setString(3, args[4]);
+						
+				//setters for pstmt3 and pstmt3.executeupdate
+				pstmt3.setInt(1, Integer.parseInt(args[0]));
+				pstmt3.setString(2, args[5]);
+				pstmt3.setString(3, args[6]);		
+				pstmt3.setInt(4, Integer.parseInt(args[7]));
+				
+				int count1=pstmt1.executeUpdate();
+				
+				int count2=pstmt2.executeUpdate();
+
+				int count3=pstmt3.executeUpdate();
+				
+				System.out.println("count1= "+count1+"    count2=  "+count2+"  count3= "+count3);
+
+				con.commit();
+				}
+		}
+		
+				catch(SQLException e)
+				{
+					e.printStackTrace();
+				}
+	}
+
+}
